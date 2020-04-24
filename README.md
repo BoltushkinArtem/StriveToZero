@@ -16,7 +16,7 @@
 
 ### Debug в VS Code
 
-Для корректной работе `"Debug"` режима в `"VS Code"`, необходимо изменить в фаайле настроек (`".vscode/launch.json"`) значение параметра `"console"` на `"integratedTerminal"` или `"externalTerminal"`
+Для корректной работы `"Debug"` режима в `"VS Code"`, необходимо изменить в файле настроек (`".vscode/launch.json"`) значение параметра `"console"` на `"integratedTerminal"` или `"externalTerminal"`
 
 >### Console (terminal) window
 >
