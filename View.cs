@@ -253,9 +253,13 @@ namespace StriveToZero
                 if (str.Length > maxLength) maxLength = str.Length;
             }
 
+            // Вывод строк
             foreach (string str in strs)
             {
-                Console.SetCursorPosition(((Console.WindowWidth / 2) - (maxLength / 2)), Console.CursorTop);
+                // Если ширина экрана больше или равна длине максимальной строки
+                if (Console.WindowWidth >= maxLength)
+                    Console.SetCursorPosition(((Console.WindowWidth / 2) - (maxLength / 2)), Console.CursorTop);
+                
                 Console.WriteLine(str);
             }
         }
