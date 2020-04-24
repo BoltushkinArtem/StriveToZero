@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/artem/Documents/MyPetProject/StriveToZero/StriveToZero.csproj",
-      "projectName": "StriveToZero",
-      "projectPath": "/Users/artem/Documents/MyPetProject/StriveToZero/StriveToZero.csproj",
+      "projectUniqueName": "/Users/artem/Documents/MyPetProject/StriveToZero/StriveToZero.Core/StriveToZero.Core.csproj",
+      "projectName": "StriveToZero.Core",
+      "projectPath": "/Users/artem/Documents/MyPetProject/StriveToZero/StriveToZero.Core/StriveToZero.Core.csproj",
       "packagesPath": "/Users/artem/.nuget/packages/",
-      "outputPath": "/Users/artem/Documents/MyPetProject/StriveToZero/obj/",
+      "outputPath": "/Users/artem/Documents/MyPetProject/StriveToZero/StriveToZero.Core/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/artem/.nuget/NuGet/NuGet.Config"

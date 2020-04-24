@@ -1,3 +1,4 @@
-.vscode
-bin
-obj/Debug
+*.vscode
+*.vs
+*bin
+*/obj/Debug
