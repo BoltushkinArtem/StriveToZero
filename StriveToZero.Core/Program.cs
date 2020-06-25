@@ -7,7 +7,7 @@ namespace StriveToZero.Core
         static void Main(string[] args)
         {
             // Инициализация объекта интерфейса
-            View view = new View();
+            View view = new View(new ConsoleWrapper());
             //  Инициализация объекта игровой логики
             Game game = new Game();
 

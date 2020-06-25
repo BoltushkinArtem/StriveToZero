@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 
-namespace StriveToZero
+namespace StriveToZero.Core
 {
     /// <summary>
     /// Класс взаимодействия с пользователем
     /// </summary>
     public class View
     {
+        IConsole console;
         // Клавиша выхода из игры
         const ConsoleKey QUIT_KEY = ConsoleKey.Q;
         
@@ -17,15 +18,20 @@ namespace StriveToZero
         // Текст сообщения для запроса интервала игрового числа
         const string INTERVAL_MESSAGE = "Задайте {0} значения в интервате 1 - 255 для выбора игрового числа.\n{1} - выйти из игры";
 
+        public View(IConsole console)
+        {
+            this.console = console;
+        }
+        
         /// <summary>
         /// Метод вывода названия и описания игры
         /// </summary>
         public void WriteInfoMessage()
         {
-            Console.Clear();
+            console.Clear();
             
             WriteLineByHorizontalCenter("СТРЕМИСЬ К НУЛЮ");
-            Console.WriteLine();
+            console.WriteLine();
             WriteLineByHorizontalCenter("Правила игры:");
             WriteLineByHorizontalCenter(new string[]{
                 "1. Программа загадывает случайное число в заданном игроками диапазоне сообщая это число игрокам.",
@@ -49,10 +55,10 @@ namespace StriveToZero
             bool isValidValue = false;
             do
             {
-                Console.WriteLine($"С кем бы Вы хотели играть?\n1 – пользователь;\n2 – компьютер;\n{QUIT_KEY.ToString()} - выйти из игры");
-                Console.Write("Строка для ввода ~ % ");
-                ConsoleKey readKey = Console.ReadKey().Key;
-                Console.WriteLine();
+                console.WriteLine($"С кем бы Вы хотели играть?\n1 – пользователь;\n2 – компьютер;\n{QUIT_KEY.ToString()} - выйти из игры");
+                console.Write("Строка для ввода ~ % ");
+                ConsoleKey readKey = console.ReadKey().Key;
+                console.WriteLine();
 
                 switch (readKey)
                 {
@@ -100,10 +106,10 @@ namespace StriveToZero
             bool isReadFinished = false;
             do
             {
-                Console.WriteLine($"Введите, пожалуйста, имена игроков.\n{QUIT_KEY.ToString()} - выйти из игры");
-                Console.Write("Строка для ввода ~ % ");
-                string line = Console.ReadLine();
-                Console.WriteLine();
+                console.WriteLine($"Введите, пожалуйста, имена игроков.\n{QUIT_KEY.ToString()} - выйти из игры");
+                console.Write("Строка для ввода ~ % ");
+                string line = console.ReadLine();
+                console.WriteLine();
 
                 // Если был инициирован выход из игры
                 if (line.Length == QUIT_KEY.ToString().Length && string.Equals(line.ToUpper(), QUIT_KEY.ToString()))
@@ -119,11 +125,11 @@ namespace StriveToZero
                 bool isValidAnswer = false;
                 do
                 {
-                    Console.WriteLine("Хотите добавить еще одного игрока? [Y]/[N]");
-                    Console.Write("Строка для ввода ~ % ");
+                    console.WriteLine("Хотите добавить еще одного игрока? [Y]/[N]");
+                    console.Write("Строка для ввода ~ % ");
                     
-                    ConsoleKey key = Console.ReadKey().Key;
-                    Console.WriteLine();
+                    ConsoleKey key = console.ReadKey().Key;
+                    console.WriteLine();
 
                     switch (key)
                     {
@@ -135,7 +141,7 @@ namespace StriveToZero
                         case ConsoleKey.Y:
                         {
                             isValidAnswer = true;
-                            Console.WriteLine();
+                            console.WriteLine();
                             break;
                         }
                         default:
@@ -178,7 +184,7 @@ namespace StriveToZero
         public void WriteNotCorrectValueMessage()
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(NOT_CORRECT_VALUE_MESSAGE);
+            console.WriteLine(NOT_CORRECT_VALUE_MESSAGE);
             Console.ForegroundColor = ConsoleColor.White;
         }
         
@@ -198,9 +204,9 @@ namespace StriveToZero
             do
             {
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine(message);
-                Console.Write("Строка для ввода ~ % ");
-                string line = Console.ReadLine();
+                console.WriteLine(message);
+                console.Write("Строка для ввода ~ % ");
+                string line = console.ReadLine();
                 
                 // Если был инициирован выход из игры
                 if (line.Length == QUIT_KEY.ToString().Length && string.Equals(line.ToUpper(), QUIT_KEY.ToString()))
@@ -236,7 +242,7 @@ namespace StriveToZero
         /// <param name="str">Строка текста</param>
         public void WriteLineByHorizontalCenter(string str)
         {
-            Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + (str.Length / 2)) + "}", str));
+            console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + (str.Length / 2)) + "}", str));
         }
 
         /// <summary>
@@ -260,7 +266,7 @@ namespace StriveToZero
                 if (Console.WindowWidth >= maxLength)
                     Console.SetCursorPosition(((Console.WindowWidth / 2) - (maxLength / 2)), Console.CursorTop);
                 
-                Console.WriteLine(str);
+                console.WriteLine(str);
             }
         }
     }

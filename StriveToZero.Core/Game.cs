@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace StriveToZero
+namespace StriveToZero.Core
 {
     /// <summary>
     /// Класс игровой логики
