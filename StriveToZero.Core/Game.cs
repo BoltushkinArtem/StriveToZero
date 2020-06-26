@@ -41,6 +41,12 @@ namespace StriveToZero.Core
         public byte GameNumber;
 
         /// <summary>
+        /// Максимальное число для вычитания из игрового числа
+        /// Диапазон от 1 до максимального числа
+        /// </summary>
+        public byte MaxNumberToSubtract;
+
+        /// <summary>
         /// Метод, генерирующий и устанавливающий игровое число в заданном интервале
         /// </summary>
         /// <param name="min">Минимальное число интервала</param>

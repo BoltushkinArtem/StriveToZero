@@ -3,7 +3,7 @@ using Xunit;
 namespace StriveToZero.Tests {
     public class GameTest {
         [Fact]
-        public void TestName () {
+        public void SetGameInterval_1and5_IsValidGameNumber () {
             //Given
             byte min = 1;
             byte max = 5;

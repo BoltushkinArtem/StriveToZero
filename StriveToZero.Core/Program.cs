@@ -4,6 +4,7 @@ namespace StriveToZero.Core
 {
     class Program
     {
+        const byte MIN_NUMBER_TO_SUBTRACT = 1;
         static void Main(string[] args)
         {
             // Инициализация объекта интерфейса
@@ -11,11 +12,22 @@ namespace StriveToZero.Core
             //  Инициализация объекта игровой логики
             Game game = new Game();
 
+            GameInitialization(ref view, ref game);
+
+            // Если был инициирован выход из игры
+            if (game.isGameOver)
+                return;
+
+            Console.ReadKey();
+        }
+
+        static void GameInitialization(ref View view, ref Game game)
+        {
             // Вывод на экран названия и описания игры
             view.WriteInfoMessage();
             Console.WriteLine();
 
-            // Ввода и установка типа игры
+            // Ввод и установка типа игры
             game.GameType = view.ReadGameType(ref game.isGameOver);
             // Если был инициирован выход из игры
             if (game.isGameOver)
@@ -24,7 +36,7 @@ namespace StriveToZero.Core
             if (game.GameType == Game.Type.Player)
             {
                 Console.WriteLine();
-                // Ввода и установка списка игроков
+                // Ввод и установка списка игроков
                 game.Players = view.ReadPlayers(ref game.isGameOver);
                 // Если был инициирован выход из игры
                 if (game.isGameOver)
@@ -32,24 +44,29 @@ namespace StriveToZero.Core
             }
             Console.WriteLine();
 
-            // Ввода минимального значения интервала игрового числа
+            // Ввод минимального значения интервала игрового числа
             byte min = view.ReadMinIntervalValue(ref game.isGameOver);
             // Если был инициирован выход из игры
             if (game.isGameOver)
                 return;
             Console.WriteLine();
             
-            // Ввода максимального значения интервала игрового числа
+            // Ввод максимального значения интервала игрового числа
             byte max = view.ReadMaxIntervalValue(ref game.isGameOver);
             // Если был инициирован выход из игры
             if (game.isGameOver)
                 return;
             Console.WriteLine();
 
-            // Генерирующия и установка игровое число в заданном интервале
+            // Генерация и установка игрового число в заданном интервале
             game.SetGameInterval(min, max);
 
-            Console.ReadKey();
+            // Ввод максимального числа для вычитания из игрового числа
+            game.MaxNumberToSubtract = view.ReadMaxNumberToSubtract(ref game.isGameOver, MIN_NUMBER_TO_SUBTRACT, game.GameNumber);
+            // Если был инициирован выход из игры
+            if (game.isGameOver)
+                return;
+            Console.WriteLine();
         }
     }
 }
