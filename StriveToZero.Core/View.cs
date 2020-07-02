@@ -19,7 +19,13 @@ namespace StriveToZero.Core
         const string INTERVAL_MESSAGE = "Задайте {0} значения в интервате 1 - 255 для выбора игрового числа.\n{1} - выйти из игры";
 
         // Текст сообщения, описывающего строку для ввода
-        const string THE_LINE_TO_ENTER = "Строка для ввода ~ % ";
+        const string THE_LINE_TO_ENTER_MESSAGE = "Строка для ввода ~ % ";
+
+        // Текст сообщения об окончании игры
+        const string GAME_OVER_MESSAGE = "\nИГРА ОКОНЧЕНА\n";
+        
+        // Текст сообщения о победе в игре
+        const string GAME_WINNER_MESSAGE = "\nИГРА ОКОНЧЕНА\nИГРОК \"{0}\" ПОБЕДИЛ\n";
 
         /// <summary>
         /// Метод вывода строки текста по горизонтали, по центру экрана
@@ -83,8 +89,9 @@ namespace StriveToZero.Core
         /// <typeparam name="T">Тип вводимого значения. Строка/символ</typeparam>
         private void ReadToLoop<T>(string message, Func<T, bool> bodyOfLoop)
         {
-            // Ввод не прекратится до тех пор, пока пользователь не введет корректные значения для продолжения работы
             T value = default(T);
+
+            // Ввод не прекратится до тех пор, пока пользователь не введет корректные значения для продолжения работы
             do
             {
                 Console.ForegroundColor = ConsoleColor.White;
@@ -92,11 +99,12 @@ namespace StriveToZero.Core
                 {
                     console.WriteLine(message);
                 }
-                console.Write(THE_LINE_TO_ENTER);
+                console.Write(THE_LINE_TO_ENTER_MESSAGE);
 
                 if (typeof(T) == typeof(string))
                 {
                     value = (T)(object)console.ReadLine();
+                    console.WriteLine();
                 }
                 else if (typeof(T) == typeof(ConsoleKey))
                 {
@@ -156,6 +164,23 @@ namespace StriveToZero.Core
         }
 
         /// <summary>
+        /// Метод вывода сообщения об окончании игры
+        /// </summary>
+        public void WriteGameOverMessage()
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            console.WriteLine(GAME_OVER_MESSAGE);
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        public void WtiteGameWinnerMessage(string playerName)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            console.WriteLine(string.Format(GAME_WINNER_MESSAGE, playerName));
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        /// <summary>
         /// Метод вывода названия и описания игры
         /// </summary>
         public void WriteInfoMessage()
@@ -182,10 +207,10 @@ namespace StriveToZero.Core
         public Game.Type ReadGameType(ref bool isGameOver)
         {
             Game.Type gameType = Game.Type.Player;
-
-            // Ввод не прекратится до тех пор, пока пользователь не введет корректные значения для продолжения работы
             string message = $"С кем бы Вы хотели играть?\n1 – пользователь;\n2 – компьютер;\n{QUIT_KEY.ToString()} - выйти из игры";
             bool isLocalGameOver = isGameOver;
+
+            // Ввод не прекратится до тех пор, пока пользователь не введет корректные значения для продолжения работы
             ReadToLoop<ConsoleKey>(message, readKey =>
             {
                 switch (readKey)
@@ -226,10 +251,10 @@ namespace StriveToZero.Core
         public List<string> ReadPlayers(ref bool isGameOver)
         {
             List<string> players = new List<string>();
+            bool isLocalGameOver = isGameOver;
 
             // Ввод не прекратится до тех пор, пока пользователь не введет корректные значения для продолжения работы
-            bool isLocalGameOver = isGameOver;
-            ReadToLoop<string>($"Введите, пожалуйста, имена игроков.\n{QUIT_KEY.ToString()} - выйти из игры", line =>
+            ReadToLoop<string>($"Введите, пожалуйста, имя игрока.\n{QUIT_KEY.ToString()} - выйти из игры", line =>
             {
                 // Если был инициирован выход из игры
                 if (IsGameOver(line))
@@ -240,8 +265,9 @@ namespace StriveToZero.Core
 
                 players.Add(line);
 
-                // Ввод не прекратится до тех пор, пока пользователь не введет корректные значения для продолжения работы
                 bool isReadFinished = false;
+
+                // Ввод не прекратится до тех пор, пока пользователь не введет корректные значения для продолжения работы
                 ReadToLoop<ConsoleKey>("Хотите добавить еще одного игрока? [Y]/[N]", key =>
                 {
                     switch (key)
@@ -302,16 +328,53 @@ namespace StriveToZero.Core
         public byte ReadMaxNumberToSubtract(ref bool isGameOver, byte min, byte max)
         {
             byte value = 0;
-
-            // Ввод не прекратится до тех пор, пока пользователь не введет корректные значения для продолжения работы
             string message = $"Задайте, пожалуйста максимальное число, которое можно будет вычесть из игрового числа.\nЗначение в интервате {min} - {max}.\n{QUIT_KEY.ToString()} - выйти из игры";
             bool isLocalGameOver = isGameOver;
+
+            // Ввод не прекратится до тех пор, пока пользователь не введет корректные значения для продолжения работы
             ReadToLoop<string>(message, line => 
             {
                 // Если был инициирован выход из игры
                 if (IsGameOver(line))
                 {
                     return isLocalGameOver = true;
+                }
+
+                // Если введенное значение невозможно преобразовать в число в диапазоне 0-255
+                if (!byte.TryParse(line, out value))
+                {
+                    WriteNotCorrectValueMessage();
+                    return false;
+                }
+
+                // Если введенное значение не попадает в заданный интервал
+                if ((value < min) || (value > max))
+                {
+                    WriteNotCorrectValueMessage();
+                    return false;
+                }
+
+                return true;
+            });
+
+            isGameOver = isLocalGameOver;
+
+            return value;
+        }
+
+        public byte ReadPlayerNumber(ref bool isGameOver, string stepPlayerName, string stepGameNumber, byte min, byte max)
+        {
+            byte value = 0;
+            bool isLocalGameOver = isGameOver;
+
+            // Ввод не прекратится до тех пор, пока пользователь не введет корректные значения для продолжения работы
+            ReadToLoop<string>($"Игровое число равно {stepGameNumber}.\n{stepPlayerName}, введите, пожалуйста свое число в интервате {min} - {max}.\n{QUIT_KEY.ToString()} - выйти из игры", line => 
+            {
+                // Если был инициирован выход из игры
+                if (IsGameOver(line))
+                {
+                    isLocalGameOver = true;
+                    return true;
                 }
 
                 // Если введенное значение невозможно преобразовать в число в диапазоне 0-255

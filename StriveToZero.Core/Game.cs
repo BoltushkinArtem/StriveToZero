@@ -4,6 +4,28 @@ using System.Collections.Generic;
 namespace StriveToZero.Core
 {
     /// <summary>
+    /// Класс данных игрового шага
+    /// </summary>
+    public class StepData
+    {
+        /// <summary>
+        /// Имя игрока
+        /// </summary>
+        public string PlayerName;
+        
+        /// <summary>
+        /// Игровое число
+        /// </summary>
+        public byte GameNumber;
+
+        public StepData(string playerName, byte gameNumber)
+        {
+            PlayerName = playerName;
+            GameNumber = gameNumber;
+        }
+    }
+
+    /// <summary>
     /// Класс игровой логики
     /// </summary>
     public class Game
@@ -23,7 +45,7 @@ namespace StriveToZero.Core
         /// <summary>
         /// Признак завершения игры
         /// </summary>
-        public bool isGameOver = false;
+        public bool IsGameOver = false;
 
         /// <summary>
         /// Типыигры
@@ -33,7 +55,7 @@ namespace StriveToZero.Core
         /// <summary>
         /// Список игроков
         /// </summary>
-        public List<string> Players;
+        private List<string> Players;
 
         /// <summary>
         /// Игровое число
@@ -47,13 +69,68 @@ namespace StriveToZero.Core
         public byte MaxNumberToSubtract;
 
         /// <summary>
-        /// Метод, генерирующий и устанавливающий игровое число в заданном интервале
+        /// Метод генерирующий и устанавливающий игровое число в заданном интервале
         /// </summary>
         /// <param name="min">Минимальное число интервала</param>
         /// <param name="max">Максимальное число интервала</param>
         public void SetGameInterval(byte min, byte max)
         {
             GameNumber = byte.Parse(new Random().Next(min, max).ToString());
+        }
+
+        /// <summary>
+        /// Метод установки списка игроков
+        /// </summary>
+        /// <param name="players">списк игроков</param>
+        public void SetPlayers(List<string> players)
+        {
+            Players = players;
+        }
+
+        /// <summary>
+        /// Метод добавления нового игрока в список игроков
+        /// </summary>
+        /// <param name="name">Имя игрока</param>
+        public void AddPlayer(string name)
+        {
+            if (Players == null)
+                Players = new List<string>();
+            Players.Add(name);
+        }
+
+        /// <summary>
+        /// Метод игрового цикла
+        /// </summary>
+        /// <param name="bodyOfLoop">Тело игрового цикла. Шаг игрового цикла</param>
+        /// <returns>Имя победителя</returns>
+        public string PlayersGameLoop(Func<StepData, byte> bodyOfLoop)
+        {
+            StepData stepData = new StepData(string.Empty, GameNumber);
+            int PlayerStepId = -1;
+
+            if (Players.Count <= 0)
+                return stepData.PlayerName;
+
+            do
+            {
+                PlayerStepId ++;
+                if (PlayerStepId >= Players.Count)
+                    PlayerStepId = 0;
+
+                stepData.PlayerName = Players[PlayerStepId];
+                byte playerNumber = bodyOfLoop(stepData);
+
+                if (IsGameOver)
+                {
+                    stepData.PlayerName = string.Empty;
+                    break;
+                }
+
+                stepData.GameNumber -= playerNumber;
+            }
+            while(stepData.GameNumber > 0);
+
+            return stepData.PlayerName;
         }
     }
 }
