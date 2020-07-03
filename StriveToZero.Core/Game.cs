@@ -18,10 +18,16 @@ namespace StriveToZero.Core
         /// </summary>
         public byte GameNumber;
 
+        /// <summary>
+        /// Признак игрового шага компьютера
+        /// </summary>
+        public bool IsPCStep;
+
         public StepData(string playerName, byte gameNumber)
         {
             PlayerName = playerName;
             GameNumber = gameNumber;
+            IsPCStep = false;
         }
     }
 
@@ -30,6 +36,21 @@ namespace StriveToZero.Core
     /// </summary>
     public class Game
     {
+        /// <summary>
+        /// Имя игрока
+        /// </summary>
+        const string PLAYER_NAME = "Игрок";
+
+        /// <summary>
+        /// Имя Компьютера
+        /// </summary>
+        const string PC_NAME = "Компьютер";
+
+        /// <summary>
+        /// Имя игрока
+        /// </summary>
+        public string PlayerName;
+
         /// <summary>
         /// Типы игры
         /// </summary>
@@ -103,7 +124,29 @@ namespace StriveToZero.Core
         /// </summary>
         /// <param name="bodyOfLoop">Тело игрового цикла. Шаг игрового цикла</param>
         /// <returns>Имя победителя</returns>
-        public string PlayersGameLoop(Func<StepData, byte> bodyOfLoop)
+        public string GameLoop(Func<StepData, byte> bodyOfLoop)
+        {
+            string winnerName = string.Empty;
+
+            if (GameType == Type.Player)
+                winnerName = PlayersGameLoop(bodyOfLoop);
+            else
+                winnerName = PCGameLoop(bodyOfLoop);
+
+            return winnerName;
+        }
+
+        public byte GetPCNumber()
+        {
+            return byte.Parse(new Random().Next(1, MaxNumberToSubtract).ToString());
+        }
+
+        /// <summary>
+        /// Метод игрового цикла с игроками
+        /// </summary>
+        /// <param name="bodyOfLoop">Тело игрового цикла. Шаг игрового цикла</param>
+        /// <returns>Имя победителя</returns>
+        private string PlayersGameLoop(Func<StepData, byte> bodyOfLoop)
         {
             StepData stepData = new StepData(string.Empty, GameNumber);
             int PlayerStepId = -1;
@@ -126,7 +169,43 @@ namespace StriveToZero.Core
                     break;
                 }
 
-                stepData.GameNumber -= playerNumber;
+                stepData.GameNumber -= (stepData.GameNumber < playerNumber) ? stepData.GameNumber : playerNumber;
+            }
+            while(stepData.GameNumber > 0);
+
+            return stepData.PlayerName;
+        }
+
+        /// <summary>
+        /// Метод игрового цикла с компьютером
+        /// </summary>
+        /// <param name="bodyOfLoop">Тело игрового цикла. Шаг игрового цикла</param>
+        /// <returns>Имя победителя</returns>
+        private string PCGameLoop(Func<StepData, byte> bodyOfLoop)
+        {
+            StepData stepData = new StepData(string.Empty, GameNumber);
+            do
+            {
+                byte playerNumber = 0;
+                if (stepData.IsPCStep)
+                {
+                    stepData.PlayerName = PC_NAME;
+                    playerNumber = bodyOfLoop(stepData);
+                }
+                else
+                {
+                    stepData.PlayerName = PLAYER_NAME;
+                    playerNumber = bodyOfLoop(stepData);
+                }
+
+                stepData.IsPCStep = !stepData.IsPCStep;
+
+                if (IsGameOver)
+                {
+                    stepData.PlayerName = string.Empty;
+                    break;
+                }
+                stepData.GameNumber -= (stepData.GameNumber < playerNumber) ? stepData.GameNumber : playerNumber;
             }
             while(stepData.GameNumber > 0);
 

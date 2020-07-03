@@ -173,11 +173,27 @@ namespace StriveToZero.Core
             Console.ForegroundColor = ConsoleColor.White;
         }
 
+        /// <summary>
+        /// Метод вывода сообщения об окончании игры с победителем
+        /// </summary>
+        /// <param name="playerName">Имя победителя</param>
         public void WtiteGameWinnerMessage(string playerName)
         {
             Console.ForegroundColor = ConsoleColor.Green;
             console.WriteLine(string.Format(GAME_WINNER_MESSAGE, playerName));
             Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        /// <summary>
+        /// Метод вывода сообщения о шаге компьютера
+        /// </summary>
+        /// <param name="stepPlayerName">Имя компьютера</param>
+        /// <param name="stepGameNumber">Игровое число на шаге</param>
+        /// <param name="stepPlayerNumber">Число компьютера</param>
+        public void WtiteCPStepMessage(string stepPlayerName, string stepGameNumber, string stepPlayerNumber)
+        {
+            console.WriteLine($"Игровое число равно {stepGameNumber}.\n{stepPlayerName} ввел числ {stepPlayerNumber}");
+            console.WriteLine();
         }
 
         /// <summary>
@@ -368,6 +384,15 @@ namespace StriveToZero.Core
             return value;
         }
 
+        /// <summary>
+        /// Метод ввода числа для вычитания
+        /// </summary>
+        /// <param name="isGameOver">Ссылка на переменную, содержащую признак завершения игры</param>
+        /// <param name="stepPlayerName">Имя игрока</param>
+        /// <param name="stepGameNumber">Игровое число на шаге</param>
+        /// <param name="min">Минимальное число интервала</param>
+        /// <param name="max">Максимальное число интервала</param>
+        /// <returns></returns>
         public byte ReadPlayerNumber(ref bool isGameOver, string stepPlayerName, string stepGameNumber, byte min, byte max)
         {
             byte value = 0;

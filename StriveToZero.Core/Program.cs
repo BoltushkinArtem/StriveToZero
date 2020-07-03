@@ -28,6 +28,13 @@ namespace StriveToZero.Core
             // Запуск игрового процесса
             string winnerName = StartTheGame(view, game);
 
+            // Если был инициирован выход из игры
+            if (game.IsGameOver)
+            {
+                view.WriteGameOverMessage();
+                return;
+            }
+
             // Вывод сообщения о победителе
             view.WtiteGameWinnerMessage(winnerName);
         }
@@ -57,6 +64,11 @@ namespace StriveToZero.Core
                 // Если был инициирован выход из игры
                 if (game.IsGameOver)
                     return;
+            }
+            else
+            {
+                Console.WriteLine();
+                // 
             }
             Console.WriteLine();
 
@@ -94,16 +106,29 @@ namespace StriveToZero.Core
         static string StartTheGame(View view, Game game)
         {
             // Запуск игрового процесса
-            return game.PlayersGameLoop(stepData => 
+            return game.GameLoop(stepData => 
             {
-                // Ввод числа, который будет вычитаться из игрового числа
-                return view.ReadPlayerNumber(
-                    ref game.IsGameOver, 
-                    stepData.PlayerName, 
-                    stepData.GameNumber.ToString(), 
-                    MIN_NUMBER_TO_SUBTRACT, 
-                    game.MaxNumberToSubtract
-                );
+                // Компьютер генерирует свое число
+                if (stepData.IsPCStep)
+                {
+                    byte playerNumber = game.GetPCNumber();
+                    view.WtiteCPStepMessage(
+                        stepData.PlayerName, 
+                        stepData.GameNumber.ToString(),
+                        playerNumber.ToString());
+                    return playerNumber;
+                }
+                else
+                {
+                    // Ввод числа, который будет вычитаться из игрового числа
+                    return view.ReadPlayerNumber(
+                        ref game.IsGameOver, 
+                        stepData.PlayerName, 
+                        stepData.GameNumber.ToString(), 
+                        MIN_NUMBER_TO_SUBTRACT, 
+                        game.MaxNumberToSubtract
+                    );
+                }
             });
         }
     }
