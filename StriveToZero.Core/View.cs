@@ -13,7 +13,7 @@ namespace StriveToZero.Core
         const ConsoleKey QUIT_KEY = ConsoleKey.Q;
 
         // Текст сообщения о некорректно введенных данных
-        const string NOT_CORRECT_VALUE_MESSAGE = "\n! ВЫ ВВЕЛИ НЕКОРРЕКТНОЕ ЗНАЧЕНИЕ, ПОПРОБУЙТЕ СНОВА.\n";
+        const string NOT_CORRECT_VALUE_MESSAGE = "! ВЫ ВВЕЛИ НЕКОРРЕКТНОЕ ЗНАЧЕНИЕ, ПОПРОБУЙТЕ СНОВА.\n";
 
         // Текст сообщения для запроса интервала игрового числа
         const string INTERVAL_MESSAGE = "Задайте {0} значения в интервате 1 - 255 для выбора игрового числа.\n{1} - выйти из игры";
@@ -22,10 +22,10 @@ namespace StriveToZero.Core
         const string THE_LINE_TO_ENTER_MESSAGE = "Строка для ввода ~ % ";
 
         // Текст сообщения об окончании игры
-        const string GAME_OVER_MESSAGE = "\nИГРА ОКОНЧЕНА\n";
+        const string GAME_OVER_MESSAGE = "ИГРА ОКОНЧЕНА\n";
         
         // Текст сообщения о победе в игре
-        const string GAME_WINNER_MESSAGE = "\nИГРА ОКОНЧЕНА\nИГРОК \"{0}\" ПОБЕДИЛ\n";
+        const string GAME_WINNER_MESSAGE = "ИГРА ОКОНЧЕНА\nИГРОК \"{0}\" ПОБЕДИЛ\n";
 
         /// <summary>
         /// Метод вывода строки текста по горизонтали, по центру экрана
@@ -261,6 +261,12 @@ namespace StriveToZero.Core
                 {
                     isLocalGameOver = true;
                     return true;
+                }
+
+                if (line.Length <= 0)
+                {
+                    WriteNotCorrectValueMessage();
+                    return false;
                 }
 
                 players.Add(line);

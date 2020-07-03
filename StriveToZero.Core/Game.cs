@@ -55,7 +55,7 @@ namespace StriveToZero.Core
         /// <summary>
         /// Список игроков
         /// </summary>
-        private List<string> Players;
+        private List<string> _players;
 
         /// <summary>
         /// Игровое число
@@ -84,7 +84,7 @@ namespace StriveToZero.Core
         /// <param name="players">списк игроков</param>
         public void SetPlayers(List<string> players)
         {
-            Players = players;
+            _players = players;
         }
 
         /// <summary>
@@ -93,9 +93,9 @@ namespace StriveToZero.Core
         /// <param name="name">Имя игрока</param>
         public void AddPlayer(string name)
         {
-            if (Players == null)
-                Players = new List<string>();
-            Players.Add(name);
+            if (_players == null)
+                _players = new List<string>();
+            _players.Add(name);
         }
 
         /// <summary>
@@ -108,16 +108,16 @@ namespace StriveToZero.Core
             StepData stepData = new StepData(string.Empty, GameNumber);
             int PlayerStepId = -1;
 
-            if (Players.Count <= 0)
+            if (_players.Count <= 0)
                 return stepData.PlayerName;
 
             do
             {
                 PlayerStepId ++;
-                if (PlayerStepId >= Players.Count)
+                if (PlayerStepId >= _players.Count)
                     PlayerStepId = 0;
 
-                stepData.PlayerName = Players[PlayerStepId];
+                stepData.PlayerName = _players[PlayerStepId];
                 byte playerNumber = bodyOfLoop(stepData);
 
                 if (IsGameOver)
